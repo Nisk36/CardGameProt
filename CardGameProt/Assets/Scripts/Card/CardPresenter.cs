@@ -16,9 +16,9 @@ public class CardPresenter : MonoBehaviour
         movement = GetComponent<CardMovement>();
     }
 
-    public void Init(int cardID)
+    public void Init(int cardID,bool isPlayer)
     {
-        model = new CardModel(cardID);
+        model = new CardModel(cardID, isPlayer);
         view.Show(model);
     }
 
@@ -46,4 +46,13 @@ public class CardPresenter : MonoBehaviour
         view.ShowSelectablePanel(flag);
     }
 
+    public void OnFiled(bool isPlayer)
+    {
+        GameManager.instance.ReduceManaCost(model.cost, isPlayer);
+        model.isFieldCard = true;
+        if(model.ability == ABILITY.FAST_ATTACK)
+        {
+            ShowSelectablePanel(true);
+        }
+    }
 }

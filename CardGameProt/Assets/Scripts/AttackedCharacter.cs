@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,14 @@ public class AttackedCharacter : MonoBehaviour, IDropHandler
         {
             return;
         }
+
+        //敵フィールドにシールドカードがあれば攻撃できない
+        CardPresenter[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards();
+        if(Array.Exists(enemyFieldCards,card => card.model.ability == ABILITY.SHIELD))
+        {
+            return;
+        }
+
         if (attacker.model.canAttack)
         {
             GameManager.instance.AttackToCharacter(attacker, true);

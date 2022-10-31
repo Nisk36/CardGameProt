@@ -8,11 +8,14 @@ public class CardModel
     public int hp;
     public int attack;
     public int cost;
+    public ABILITY ability;
+
     public bool isAlive;
     public bool canAttack;
     public bool isFieldCard;
+    public bool isPlayerCard;
 
-    public CardModel(int cardID)
+    public CardModel(int cardID, bool isPlayer)
     {
         //cardEntityからデータ取り出す   
         CardEntity cardEntity = Resources.Load<CardEntity>("CardDatas/Card"+cardID);
@@ -20,7 +23,9 @@ public class CardModel
         hp = cardEntity.hp;
         attack = cardEntity.attack;
         cost = cardEntity.cost;
+        ability = cardEntity.ability;
         isAlive = true;
+        isPlayerCard = isPlayer;
     }
 
     void Damage(int damage)

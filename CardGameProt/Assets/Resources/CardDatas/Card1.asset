@@ -16,3 +16,4 @@ MonoBehaviour:
   hp: 2
   attack: 1
   cost: 1
+  ability: 1

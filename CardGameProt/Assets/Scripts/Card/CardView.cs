@@ -10,6 +10,7 @@ public class CardView : MonoBehaviour
     [SerializeField] TextMeshProUGUI attackText;
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] GameObject selectablePanal;
+    [SerializeField] GameObject shieldPanel;
 
     public void Show(CardModel cardModel)
     {
@@ -17,6 +18,14 @@ public class CardView : MonoBehaviour
         hpText.text = cardModel.hp.ToString();
         attackText.text = cardModel.attack.ToString();
         costText.text = cardModel.cost.ToString();
+        if(cardModel.ability == ABILITY.SHIELD)
+        {
+            shieldPanel.SetActive(true);
+        }
+        else
+        {
+            shieldPanel.SetActive(false);
+        }
     }
 
     public void Refresh(CardModel cardModel)
