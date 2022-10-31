@@ -18,7 +18,7 @@ public class AttackedCharacter : MonoBehaviour, IDropHandler
         }
 
         //敵フィールドにシールドカードがあれば攻撃できない
-        CardPresenter[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards();
+        CardPresenter[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards(attacker.model.isPlayerCard);
         if(Array.Exists(enemyFieldCards,card => card.model.ability == ABILITY.SHIELD))
         {
             return;
@@ -26,7 +26,7 @@ public class AttackedCharacter : MonoBehaviour, IDropHandler
 
         if (attacker.model.canAttack)
         {
-            GameManager.instance.AttackToCharacter(attacker, true);
+            GameManager.instance.AttackToCharacter(attacker);
         }
 
     }

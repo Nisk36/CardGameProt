@@ -23,7 +23,7 @@ public class AttackedCard : MonoBehaviour, IDropHandler
             return;
         }
         //シールドカードがあって、ターゲットがシールドでないなら攻撃できない
-        CardPresenter[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards();
+        CardPresenter[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards(attacker.model.isPlayerCard);
         if (Array.Exists(enemyFieldCards, card => card.model.ability == ABILITY.SHIELD) && defender.model.ability != ABILITY.SHIELD)
 
         {

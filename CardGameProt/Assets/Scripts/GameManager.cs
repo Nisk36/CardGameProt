@@ -43,8 +43,8 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         uiManager.HideResultPanel();
-        player.Init(new List<int>() { 1,2,1,2,3,4});
-        enemy.Init(new List<int>() { 2,1,3,1,2,3});
+        player.Init(new List<int>() { 1,5,1,2,3,4});
+        enemy.Init(new List<int>() { 2,5,3,1,2,3});
         timeCount = 8;
         uiManager.UpdateTime(timeCount);
         uiManager.ShowManaCost(player.manaCost, enemy.manaCost);
@@ -159,9 +159,29 @@ public class GameManager : MonoBehaviour
         ChangeTurn();
     }
 
-    public CardPresenter[] GetEnemyFieldCards()
+    public CardPresenter[] GetEnemyFieldCards(bool isPlayer)
     {
-        return enemyField.GetComponentsInChildren<CardPresenter>();
+        if (isPlayer)
+        {
+            return enemyField.GetComponentsInChildren<CardPresenter>();
+        }
+        else
+        {
+            return playerField.GetComponentsInChildren<CardPresenter>();
+        }
+        
+    }
+
+    public CardPresenter[] GetFriendFieldCards(bool isPlayer)
+    {
+        if (isPlayer)
+        {
+            return playerField.GetComponentsInChildren<CardPresenter>();
+        }
+        else
+        {
+            return enemyField.GetComponentsInChildren<CardPresenter>();
+        }
     }
 
     public void OnClickTurnEndButton()
@@ -231,9 +251,9 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void AttackToCharacter(CardPresenter attacker, bool isPlayerCard)
+    public void AttackToCharacter(CardPresenter attacker)
     {
-        if (isPlayerCard)
+        if (attacker.model.isPlayerCard)
         {
             enemy.HP -= attacker.model.attack;
         }
@@ -245,6 +265,20 @@ public class GameManager : MonoBehaviour
         attacker.ShowSelectablePanel(false);
         uiManager.ShowHP(player.HP, enemy.HP);
         CheckHP();
+    }
+
+    public void HealToCharacter(CardPresenter healer)
+    {
+        if (healer.model.isPlayerCard)
+        {
+            player.HP += healer.model.attack;
+        }
+        else
+        {
+            enemy.HP += healer.model.attack;
+        }
+        //ï\é¶çXêV
+        uiManager.ShowHP(player.HP, enemy.HP);
     }
 
     public void CheckHP()

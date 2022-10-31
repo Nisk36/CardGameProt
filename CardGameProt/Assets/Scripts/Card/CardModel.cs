@@ -9,6 +9,7 @@ public class CardModel
     public int attack;
     public int cost;
     public ABILITY ability;
+    public SPELL spell;
 
     public bool isAlive;
     public bool canAttack;
@@ -24,6 +25,8 @@ public class CardModel
         attack = cardEntity.attack;
         cost = cardEntity.cost;
         ability = cardEntity.ability;
+        spell = cardEntity.spell;
+
         isAlive = true;
         isPlayerCard = isPlayer;
     }
@@ -38,8 +41,20 @@ public class CardModel
         }
     }
 
+    void RecoveryHP(int point)
+    {
+        hp += point;
+    }
+
     public void Attack(CardPresenter card)
     {
         card.model.Damage(attack);
     }
+    //‘¼‚ÌƒJ[ƒh‚ğ‰ñ•œ‚³‚¹‚é
+    public void Heal(CardPresenter card)
+    {
+        card.model.RecoveryHP(attack);
+    }
+
+
 }

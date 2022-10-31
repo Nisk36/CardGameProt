@@ -26,6 +26,10 @@ public class CardView : MonoBehaviour
         {
             shieldPanel.SetActive(false);
         }
+        if(cardModel.spell != SPELL.NONE)
+        {
+            hpText.gameObject.SetActive(false);
+        }
     }
 
     public void Refresh(CardModel cardModel)

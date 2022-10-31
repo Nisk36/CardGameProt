@@ -24,20 +24,34 @@ public class EnemyAI : MonoBehaviour
         //場にカードを出す
         //手札のカードリストを取得
         CardPresenter[] handCardList = gameManager.enemyHand.GetComponentsInChildren<CardPresenter>();
+        //スペルか普通のカードか判定
         //コストを見て出せるだけ出す
-        while (Array.Exists(handCardList, card => card.model.cost <= gameManager.enemy.manaCost))
+        //(コスト以下)かつ(スペルでない　または　スペルであり使用条件満たしてる)
+        while (Array.Exists(handCardList, card => (card.model.cost <= gameManager.enemy.manaCost)
+        && (!card.IsSpell || (card.IsSpell && card.CanUseSpell())) ))
         {
             //コスト以下のカードリストを取得
-            CardPresenter[] selectableHandCardList = Array.FindAll(handCardList, card => card.model.cost <= gameManager.enemy.manaCost);
+            CardPresenter[] selectableHandCardList = Array.FindAll(handCardList, card => (card.model.cost <= gameManager.enemy.manaCost)
+                                                                 && (!card.IsSpell || (card.IsSpell && card.CanUseSpell())));
             //場に出すカードを選択
-            CardPresenter enemyCard = selectableHandCardList[0];
-            //カードの移動
-            enemyCard.movement.SetCardTransform(gameManager.enemyField);
-            enemyCard.OnFiled(false);
+            CardPresenter selectCard = selectableHandCardList[0];
+            //スペルカードなら使用する
+            if (selectCard.IsSpell)
+            {
+                CastSpell(selectCard);
+                handCardList = gameManager.enemyHand.GetComponentsInChildren<CardPresenter>();
+            }
+            else
+            {
+                //カードを移動
+                selectCard.movement.SetCardTransform(gameManager.enemyField);
+                selectCard.OnField();
+            }
 
             //手札更新
-            handCardList = gameManager.enemyHand.GetComponentsInChildren<CardPresenter>();
             yield return new WaitForSeconds(1);
+            handCardList = gameManager.enemyHand.GetComponentsInChildren<CardPresenter>();
+            
         }
 
 
@@ -69,7 +83,7 @@ public class EnemyAI : MonoBehaviour
             }
             else
             {
-                gameManager.AttackToCharacter(attacker, false);
+                gameManager.AttackToCharacter(attacker);
             }
             enemyFieldCardList = gameManager.enemyField.GetComponentsInChildren<CardPresenter>();
             yield return new WaitForSeconds(1);
@@ -79,5 +93,20 @@ public class EnemyAI : MonoBehaviour
 
         gameManager.ChangeTurn();
 
+    }
+
+    void CastSpell(CardPresenter card)
+    {
+        CardPresenter target = null;
+        if(card.model.spell == SPELL.HEAL_FRIEND)
+        {
+            target = gameManager.GetFriendFieldCards(card.model.isPlayerCard)[0];
+            Debug.Log(target);
+        }
+        if(card.model.spell == SPELL.DAMAGE_ENEMY)
+        {
+            target = gameManager.GetEnemyFieldCards(card.model.isPlayerCard)[0];
+        }
+        card.UseSpellTo(target);
     }
 }
